@@ -23,17 +23,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
     opt.UseInMemoryDatabase("InMemoryDb"));
 
+builder.Services.AddHttpClient("jsonplaceholder", client =>
+{
+    client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/");
+});
+
 // FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterValidator>();
 builder.Services.AddScoped<IValidator<LoginDto>, LoginValidator>();
-
-// HttpClient for external API
-builder.Services.AddHttpClient("jsonplaceholder", client =>
-{
-    client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/");
-});
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IExternalApiService, ExternalApiService>();

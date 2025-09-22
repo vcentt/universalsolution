@@ -10,7 +10,7 @@ public class ExternalApiService : IExternalApiService
 
     public ExternalApiService(IHttpClientFactory http)
     {
-        _http = http;
+        _http = http; 
     }
 
     public async Task<List<Post>> GetPostsAsync()
@@ -27,14 +27,18 @@ public class ExternalApiService : IExternalApiService
         var json = await response.Content.ReadAsStringAsync();
         var posts = JsonSerializer.Deserialize<List<Post>>(json,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        
+        if (posts is null)
+        {
+            throw new NotFoundException("API returned a null list of posts.");
+        }
 
-        return posts ?? new List<Post>();
+        return posts;
     }
 
     public async Task<Post> CreatePostAsync(CreatePostDto postDto)
     {
         var client = _http.CreateClient("jsonplaceholder");
-
         var response = await client.PostAsJsonAsync("posts", postDto);
 
         if (!response.IsSuccessStatusCode)

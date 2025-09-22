@@ -39,6 +39,6 @@ public class ExternalController : ControllerBase
         }
 
         var post = await _externalApiService.CreatePostAsync(createPostDto);
-        return CreatedAtAction(nameof(GetPosts), new { id = post.Id }, post);
+        return Ok(post);
     }
 }
